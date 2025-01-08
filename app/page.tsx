@@ -10,19 +10,23 @@ export default async function Home() {
     <>
       <section className="flex flex-col justify-center p-8 bg-gray-200 min-h-[400px]">
         <h1 className="mb-12 text-4xl text-[#e50914]">
-          Keep track of the movies and tv shows you've already watched <br />
-          and discover your next watch based on it.
+          Keep track of your watched movies and tv shows <br />
+          then discover more based on it.
         </h1>
-        <p className="text-lg">Description</p>
+        <p className="text-lg">
+          Discover thousands of movies and tv shows or search a specific one you
+          want to watch <br /> then add the ones you've already watched to your
+          list.
+        </p>
         <div className="flex gap-2 mt-12">
           <Link
             href="/discover"
             className="p-4 leading-none bg-[#e50914] font-bold text-white uppercase"
           >
-            Discover Movies/TV Shows
+            Discover Movies & TV Shows
           </Link>
           <button className="p-4 leading-none bg-[#e50914] font-bold text-white uppercase">
-            Search Movies/TV Shows
+            Search Movies & TV Shows
           </button>
         </div>
       </section>
@@ -46,8 +50,8 @@ async function WatchedList() {
   ) : (
     <div>
       <h2>
-        No movies or tv shows added to your watched list. <br />
-        Use the search and discover button above to get started.
+        No movies and tv shows added to your watched list. <br />
+        Use the discover and search button above to get started.
       </h2>
     </div>
   );
