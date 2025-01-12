@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { mediaTable } from "@/db/schema";
 import Link from "next/link";
 import { Suspense } from "react";
-import Media from "@/components/media";
+import WatchedList from "@/components/watched-list";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default async function Home() {
@@ -32,21 +32,17 @@ export default async function Home() {
       </section>
       <h2 className="my-12 text-4xl text-[#e50914]">Your watched list</h2>
       <Suspense fallback={<WatchedListSkeleton />}>
-        <WatchedList />
+        <SuspenseWatchedList />
       </Suspense>
     </>
   );
 }
 
-async function WatchedList() {
+async function SuspenseWatchedList() {
   const watchedList = await db.select().from(mediaTable);
 
   return watchedList.length ? (
-    <section className="watched-list grid grid-cols-6 gap-2 mb-12">
-      {watchedList.map((media, index) => (
-        <Media key={`${index}-${media.id}`} media={media} />
-      ))}
-    </section>
+    <WatchedList watchedList={watchedList} />
   ) : (
     <div>
       <h2>
