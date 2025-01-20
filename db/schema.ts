@@ -73,3 +73,5 @@ export const mediaTable = pgTable("media", {
     .notNull()
     .references(() => user.id),
 });
+
+export const schema = { user, session, account, verification, mediaTable };

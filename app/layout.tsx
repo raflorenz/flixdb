@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/toaster";
+import UserAvatar from "@/components/user-avatar";
 
 export const metadata: Metadata = {
   title: "FlixDB",
@@ -21,6 +22,7 @@ export default function RootLayout({
             <h1 className="my-8 text-6xl text-[#e50914] uppercase">
               <Link href="/">FlixDB</Link>
             </h1>
+            <UserAvatar />
           </header>
           <main>{children}</main>
         </div>

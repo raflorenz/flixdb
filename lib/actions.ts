@@ -3,9 +3,22 @@
 import { db } from "@/db";
 import { mediaTable } from "@/db/schema";
 import { revalidateTag } from "next/cache";
+import { auth } from "./auth";
+import { headers } from "next/headers";
 
 export async function addToWatchedList(media) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return {
+      success: false,
+      message: "You're not authentiated, sign in to continue.",
+    };
+  }
 
   const mediaName = media.media_type === "movie" ? "Movie" : "TV Show";
 
@@ -22,6 +35,7 @@ export async function addToWatchedList(media) {
       number_of_episodes: media.number_of_episodes,
       runtime: media.runtime,
       status: media.status,
+      userId: session?.user.id,
     });
 
     revalidateTag("media-details");

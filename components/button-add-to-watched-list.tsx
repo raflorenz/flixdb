@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { addToWatchedList } from "@/lib/actions";
 import { toast } from "@/hooks/use-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function ButtonAddToWatchedList({ media }) {
   const [isPending, startTransition] = useTransition();
@@ -24,6 +25,9 @@ export default function ButtonAddToWatchedList({ media }) {
           variant: "destructive",
           duration: 3000,
         });
+
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await authClient.signIn.social({ provider: "google" });
       }
     });
   };

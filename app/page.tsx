@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import WatchedList from "@/components/watched-list";
 import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function Home() {
   return (
@@ -39,7 +41,11 @@ export default async function Home() {
 }
 
 async function SuspenseWatchedList() {
-  const watchedList = await db.select().from(mediaTable);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const watchedList = session ? await db.select().from(mediaTable) : [];
 
   return watchedList.length ? (
     <WatchedList watchedList={watchedList} />
