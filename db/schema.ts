@@ -57,7 +57,7 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp(),
 });
 
-export const mediaTable = pgTable("media", {
+export const media = pgTable("media", {
   id: integer().primaryKey().notNull(),
   media_type: text(),
   title: text(),
@@ -74,4 +74,4 @@ export const mediaTable = pgTable("media", {
     .references(() => user.id),
 });
 
-export const schema = { user, session, account, verification, mediaTable };
+export const schema = { user, session, account, verification, media };

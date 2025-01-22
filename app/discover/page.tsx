@@ -2,6 +2,9 @@ import { Suspense } from "react";
 import { getTrending, getPopular, getTopRated } from "@/lib/api";
 import MediaList from "@/components/media-list";
 import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { getWatchedListIds } from "@/lib/actions";
 
 export default async function Page() {
   const trendingPromise = getTrending();
@@ -10,16 +13,27 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<MediaListSkeleton />}>
-      <SuspenseMediaList promise={trendingPromise} heading="Trending Now" />
-      <SuspenseMediaList promise={popularPromise} heading="Popular" />
-      <SuspenseMediaList promise={topRatedPromise} heading="Top Rated" />
+      <MediaListWrapper promise={trendingPromise} heading="Trending Now" />
+      <MediaListWrapper promise={popularPromise} heading="Popular" />
+      <MediaListWrapper promise={topRatedPromise} heading="Top Rated" />
     </Suspense>
   );
 }
 
-async function SuspenseMediaList({ promise, heading }) {
+async function MediaListWrapper({ promise, heading }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   const data = await promise;
-  return <MediaList mediaList={data} heading={heading} />;
+  const watchedListIds = await getWatchedListIds(session);
+  const mediaList = data.map((item) => {
+    return {
+      ...item,
+      watched: watchedListIds.includes(item.id),
+    };
+  });
+
+  return <MediaList mediaList={mediaList} heading={heading} />;
 }
 
 function MediaListSkeleton() {

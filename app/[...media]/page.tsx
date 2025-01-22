@@ -1,13 +1,23 @@
 import { Suspense } from "react";
 import MediaDetails from "@/components/media-details";
 import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export default async function Page({ params }) {
   return (
     <Suspense fallback={<MediaDetailsSkeleton />}>
-      <MediaDetails params={params} />
+      <MediaDetailsWrapper params={params} />
     </Suspense>
   );
+}
+
+async function MediaDetailsWrapper({ params }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  return <MediaDetails params={params} session={session} />;
 }
 
 function MediaDetailsSkeleton() {

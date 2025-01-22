@@ -1,12 +1,13 @@
 "use server";
 
 import { db } from "@/db";
-import { mediaTable } from "@/db/schema";
+import { media } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { auth } from "./auth";
 import { headers } from "next/headers";
 
-export async function addToWatchedList(media) {
+export async function addToWatchedList(mediaItem) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const session = await auth.api.getSession({
@@ -20,21 +21,21 @@ export async function addToWatchedList(media) {
     };
   }
 
-  const mediaName = media.media_type === "movie" ? "Movie" : "TV Show";
+  const mediaName = mediaItem.media_type === "movie" ? "Movie" : "TV Show";
 
   try {
-    await db.insert(mediaTable).values({
-      id: media.id,
-      media_type: media.media_type,
-      title: media.title,
-      name: media.name,
-      poster_path: media.poster_path,
-      release_date: media.release_date,
-      first_air_date: media.first_air_date,
-      vote_average: media.vote_average,
-      number_of_episodes: media.number_of_episodes,
-      runtime: media.runtime,
-      status: media.status,
+    await db.insert(media).values({
+      id: mediaItem.id,
+      media_type: mediaItem.media_type,
+      title: mediaItem.title,
+      name: mediaItem.name,
+      poster_path: mediaItem.poster_path,
+      release_date: mediaItem.release_date,
+      first_air_date: mediaItem.first_air_date,
+      vote_average: mediaItem.vote_average,
+      number_of_episodes: mediaItem.number_of_episodes,
+      runtime: mediaItem.runtime,
+      status: mediaItem.status,
       userId: session?.user.id,
     });
 
@@ -52,4 +53,14 @@ export async function addToWatchedList(media) {
       message: `Failed to add ${mediaName}. Please try again.`,
     };
   }
+}
+
+export async function getWatchedListIds(session) {
+  const results = await db
+    .select({ id: media.id })
+    .from(media)
+    .where(eq(media.userId, session?.user.id));
+  const idArray = results.map((row) => row.id);
+
+  return idArray;
 }

@@ -1,6 +1,4 @@
 import { unstable_cacheLife as cacheLife } from "next/cache";
-import { db } from "@/db";
-import { mediaTable } from "@/db/schema";
 
 const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -32,20 +30,12 @@ export async function fetchMediaDetails(media) {
   }
 }
 
-export async function getWatchedListIds() {
-  const results = await db.select({ id: mediaTable.id }).from(mediaTable);
-  const idArray = results.map((row) => row.id);
-
-  return idArray;
-}
-
 async function generateUpdatedResults(results) {
   const updatedResults = await Promise.all(
     results.map(async (item) => {
       const { runtime, number_of_episodes, status } = await fetchMediaDetails(
         item
       );
-      const watchedListIds = await getWatchedListIds();
 
       return {
         id: item.id,
@@ -59,7 +49,6 @@ async function generateUpdatedResults(results) {
         runtime,
         number_of_episodes,
         status,
-        watched: watchedListIds.includes(item.id),
       };
     })
   );

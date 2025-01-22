@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { mediaTable } from "@/db/schema";
+import { media } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { Suspense } from "react";
 import WatchedList from "@/components/watched-list";
@@ -34,18 +35,21 @@ export default async function Home() {
       </section>
       <h2 className="my-12 text-4xl text-[#e50914]">Your watched list</h2>
       <Suspense fallback={<WatchedListSkeleton />}>
-        <SuspenseWatchedList />
+        <WatchedListWrapper />
       </Suspense>
     </>
   );
 }
 
-async function SuspenseWatchedList() {
+async function WatchedListWrapper() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const watchedList = session ? await db.select().from(mediaTable) : [];
+  const watchedList = await db
+    .select()
+    .from(media)
+    .where(eq(media.userId, session?.user.id));
 
   return watchedList.length ? (
     <WatchedList watchedList={watchedList} />
