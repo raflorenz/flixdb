@@ -20,7 +20,13 @@ export default async function Page() {
   );
 }
 
-async function MediaListWrapper({ promise, heading }) {
+async function MediaListWrapper({
+  promise,
+  heading,
+}: {
+  promise: Promise<{}[]>;
+  heading: string;
+}) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

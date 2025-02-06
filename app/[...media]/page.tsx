@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export default async function Page({ params }) {
+export default async function Page({ params }: { params: Promise<string[]> }) {
   return (
     <Suspense fallback={<MediaDetailsSkeleton />}>
       <MediaDetailsWrapper params={params} />
@@ -12,7 +12,7 @@ export default async function Page({ params }) {
   );
 }
 
-async function MediaDetailsWrapper({ params }) {
+async function MediaDetailsWrapper({ params }: { params: Promise<string[]> }) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
