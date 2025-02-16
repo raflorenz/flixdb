@@ -14,28 +14,38 @@ import {
 export default function UserAvatar() {
   const { data } = authClient.useSession();
 
-  if (data) {
+  if (!data) {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger className="outline-none">
-          <Avatar>
-            <AvatarImage src={data.user.image!} alt="avatar image" />
-            <AvatarFallback>UA</AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>
-            {data.user.name} <br />
-            {data.user.email}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <button onClick={async () => await authClient.signOut()}>
-              Sign Out
-            </button>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <button
+        onClick={async () =>
+          await authClient.signIn.social({ provider: "google" })
+        }
+      >
+        Sign In
+      </button>
     );
   }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="outline-none">
+        <Avatar>
+          <AvatarImage src={data.user.image!} alt="avatar image" />
+          <AvatarFallback>UA</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>
+          {data.user.name} <br />
+          {data.user.email}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <button onClick={async () => await authClient.signOut()}>
+            Sign Out
+          </button>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
