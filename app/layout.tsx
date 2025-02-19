@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
+import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
-import UserAvatar from "@/components/user-avatar";
 
 export const metadata: Metadata = {
   title: "FlixDB",
@@ -18,12 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="container mx-auto px-8">
-          <header className="flex justify-between items-center">
-            <h1 className="my-8 text-6xl text-[#e50914] uppercase">
-              <Link href="/">FlixDB</Link>
-            </h1>
-            <UserAvatar />
-          </header>
+          <Header />
           <main>{children}</main>
         </div>
         <Toaster />
